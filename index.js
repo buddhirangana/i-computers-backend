@@ -1,6 +1,5 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import studentRouter from './routers/studentRouter.js';
 import userRouter from './routers/userRouter.js';
 import authenticateUser from './middlewares/authentication.js';
 import productRouter from './routers/productRouter.js';
@@ -21,9 +20,6 @@ mongoose.connect(mongodbURI).then(() => {
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-
-
-app.use("/students", studentRouter);
 app.use("/users", userRouter);
 app.use("/products", productRouter);
 
