@@ -3,8 +3,10 @@ import mongoose from "mongoose";
 import userRouter from "./routers/userRouter.js";
 import authenticateUser from "./middlewares/authentication.js";
 import productRouter from "./routers/productRouter.js";
+import cors from "cors";
 
 const app = express();
+
 
 const mongodbURI = "mongodb+srv://admin:1234@cluster0.xuujurc.mongodb.net/icomputers?appName=Cluster0"
 
@@ -15,7 +17,7 @@ mongoose.connect(mongodbURI).then(
 )
 
 app.use( express.json() )
-
+app.use(cors());
 app.use(authenticateUser)
 
 app.use("/users",userRouter)
