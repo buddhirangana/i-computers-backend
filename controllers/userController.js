@@ -62,7 +62,8 @@ export async function loginUser(req,res){
                 })
 
                 res.json({
-                    token : token
+                    token : token,
+                    isAdmin : user.isAdmin
                 })
 
 
