@@ -16,8 +16,10 @@ mongoose.connect(mongodbURI).then(
     }
 )
 
-app.use( express.json() )
 app.use(cors());
+
+app.use( express.json() )
+
 app.use(authenticateUser)
 
 app.use("/users",userRouter)
