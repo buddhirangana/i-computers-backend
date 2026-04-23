@@ -1,13 +1,13 @@
 import Order from "../models/order.js"
 import Product from "../models/product.js"
 
-export default async function createOrder(req,res){
+export default async function createOrder(req, res) {
 
     const user = req.user
 
-    if(user == null){
+    if (user == null) {
         res.status(401).json({
-            message : "You need to be logged in to place an order"
+            message: "You need to be logged in to place an order"
         })
         return
     }
@@ -15,33 +15,33 @@ export default async function createOrder(req,res){
     //let orderId = "ORD00000001"
 
     const orderData = {
-        orderId : "ORD00000001",
-        email : user.email,
-        firstName : user.firstName,
-        lastName : user.lastName,
-        addressLineOne : req.body.addressLineOne,
-        adressLineTwo : req.body.adressLineTwo,
-        city : req.body.city,
-        state : req.body.state,
-        postalCode : req.body.postalCode,
-        phone : req.body.phone,
-        total : 0,
-        items : []
+        orderId: "ORD00000001",
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        addressLineOne: req.body.addressLineOne,
+        adressLineTwo: req.body.adressLineTwo,
+        city: req.body.city,
+        state: req.body.state,
+        postalCode: req.body.postalCode,
+        phone: req.body.phone,
+        total: 0,
+        items: []
     }
 
-    if(req.body.firstName != null && req.body.firstName !=""){
+    if (req.body.firstName != null && req.body.firstName != "") {
         orderData.firstName = req.body.firstName
     }
 
-    if(req.body.lastName != null && req.body.lastName !=""){
+    if (req.body.lastName != null && req.body.lastName != "") {
         orderData.lastName = req.body.lastName
     }
 
-    try{
+    try {
 
         const lastOrder = await Order.findOne().sort({ date: -1 })
 
-        if(lastOrder != null){
+        if (lastOrder != null) {
             //ORD00000039
             const lastOrderId = lastOrder.orderId //"ORD00000039"
 
@@ -61,26 +61,26 @@ export default async function createOrder(req,res){
         {productId : "PROD00000001", quantity : 2}
         */
 
-        for(let i = 0; i < req.body.items.length; i++){
+        for (let i = 0; i < req.body.items.length; i++) {
 
-            const product = await Product.findOne({productId : req.body.items[i].productId})
+            const product = await Product.findOne({ productId: req.body.items[i].productId })
             //if(product == null || !product.isAvailable || product.stock < req.body.items[i].quantity)
-            if(product == null || !product.isAvailable){
+            if (product == null || !product.isAvailable) {
                 res.status(400).json({
-                    message : "Product with productId " + req.body.items[i].productId + " not found. Please place your order without this product."
+                    message: "Product with productId " + req.body.items[i].productId + " not found. Please place your order without this product."
                 })
                 return
-            }else{
+            } else {
 
                 orderData.items.push({
-                    product : {
-                        productId : product.productId,
-                        name : product.name,
-                        price : product.price,
-                        labelledPrice : product.labelledPrice,
-                        image : product.images[0]
+                    product: {
+                        productId: product.productId,
+                        name: product.name,
+                        price: product.price,
+                        labelledPrice: product.labelledPrice,
+                        image: product.images[0]
                     },
-                    quantity : req.body.items[i].quantity
+                    quantity: req.body.items[i].quantity
                 })
 
                 orderData.total += product.price * req.body.items[i].quantity
@@ -104,77 +104,105 @@ export default async function createOrder(req,res){
         console.log(result)
 
         res.status(201).json({
-            message : "Order placed successfully"
+            message: "Order placed successfully"
         })
 
-    }catch(error){
+    } catch (error) {
         console.log(error)
         res.status(500).json({
-            message : "Error creating order"
+            message: "Error creating order"
         })
     }
 }
 
-export async function getOrders(req,res){
+export async function getOrders(req, res) {
 
-    try{
-        if(req.user == null){
+    try {
+        if (req.user == null) {
             res.status(401).json({
-                message : "You need to be logged in to view your orders"
+                message: "You need to be logged in to view your orders"
             })
             return
         }
 
-        const pageSizeInString = req.params.pageSize|| "10"   //"10"
+        const pageSizeInString = req.params.pageSize || "10"   //"10"
         const pageNumberInString = req.params.pageNumber || "1"   //"12"
 
         const pageSize = parseInt(pageSizeInString) //10
         const pageNumber = parseInt(pageNumberInString) //12``
-        
-        if(pageSize < 1 || pageSize > 100){
+
+        if (pageSize < 1 || pageSize > 100) {
             res.status(400).json({
-                message : "pageSize should be between 1 and 100"
+                message: "pageSize should be between 1 and 100"
             })
-             return
+            return
         }
 
-        
 
-        if(req.user.isAdmin){
+
+        if (req.user.isAdmin) {
 
             const orderCount = await Order.countDocuments()
 
             const totalPages = Math.ceil(orderCount / pageSize)
-          
-            const orders = await Order.find().sort({ date : -1 }).skip( (pageNumber -1) * pageSize ).limit(pageSize)
+
+            const orders = await Order.find().sort({ date: -1 }).skip((pageNumber - 1) * pageSize).limit(pageSize)
 
             res.status(200).json({
-                orders : orders,
-                totalPages : totalPages,
-                total : orderCount
+                orders: orders,
+                totalPages: totalPages,
+                total: orderCount
             })
 
-        }else{
+        } else {
 
-            const orderCount = await Order.countDocuments({ email : req.user.email })
+            const orderCount = await Order.countDocuments({ email: req.user.email })
 
             const totalPages = Math.ceil(orderCount / pageSize)
 
-            const orders = await Order.find({ email : req.user.email }).sort({ date : -1 }).skip( (pageNumber -1) * pageSize ).limit(pageSize)
+            const orders = await Order.find({ email: req.user.email }).sort({ date: -1 }).skip((pageNumber - 1) * pageSize).limit(pageSize)
 
             res.status(200).json({
-                orders : orders,
-                totalPages : totalPages,
-                total : orderCount
+                orders: orders,
+                totalPages: totalPages,
+                total: orderCount
             })
 
         }
 
-    }catch(error){
+    } catch (error) {
         console.log(error)
         res.status(500).json({
-            message : "Error fetching orders"
+            message: "Error fetching orders"
         })
     }
-    
+}
+
+export async function updateOrderStatusAndNotes(req, res) {
+
+    if (req.user && req.user.isAdmin) {
+        try {
+
+            const orderId = req.params.orderId
+
+            await Order.findOneAndUpdate(
+                { orderId: orderId },
+                { status: req.body.status, notes: req.body.notes }
+            )
+            res.status(200).json({
+                message: "Order status and notes updated successfully"
+            })
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                message: "Error updating order status and notes"
+            })
+        }
+    } else {
+        res.status(403).json({
+            message: "You are not authorized to perform this action"
+        })
+    }
+
 }
