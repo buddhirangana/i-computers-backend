@@ -489,3 +489,38 @@ export async function toggleUserRole(req, res) {
         });
     }
 }
+
+export async function deleteUser(req, res) {
+    if (!isAdmin(req)) {
+        res.status(403).json({
+            message: "Access denied. Admins only."
+        });
+        return;
+    }
+    try {
+        const user = await User.findOne({ email: req.params.email });
+        if (user == null) {
+            res.status(404).json({
+                message: "User not found"
+            });
+            return;
+        }
+
+        // Prevent admin from deleting themselves
+        if (user.email === req.user.email) {
+            res.status(400).json({
+                message: "You cannot delete yourself."
+            });
+            return;
+        }
+
+        await User.findOneAndDelete({ email: req.params.email });
+        res.json({
+            message: "User deleted successfully"
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Error deleting user"
+        });
+    }
+}
