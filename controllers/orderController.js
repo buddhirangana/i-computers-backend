@@ -204,5 +204,4 @@ export async function updateOrderStatusAndNotes(req, res) {
             message: "You are not authorized to perform this action"
         })
     }
-
 }

@@ -61,6 +61,10 @@ export async function loginUser(req,res){
             res.status(404).json({
                 message : "User not found"
             })
+       }else if(user.isBlocked){
+            res.status(403).json({
+                message : "Your account has been blocked. Please contact support."
+            })
        }else{
             const isPasswordCorrect = bcrypt.compareSync(req.body.password, user.password)
 
@@ -394,5 +398,94 @@ export function isAdmin(req){
         return true
     }else{
         return false
+    }
+}
+
+export async function getAllUsers(req, res) {
+    if (!isAdmin(req)) {
+        res.status(403).json({
+            message: "Access denied. Admins only."
+        });
+        return;
+    }
+    try {
+        const users = await User.find({}, "-password");
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({
+            message: "Error fetching users"
+        });
+    }
+}
+
+export async function toggleBlockUser(req, res) {
+    if (!isAdmin(req)) {
+        res.status(403).json({
+            message: "Access denied. Admins only."
+        });
+        return;
+    }
+    try {
+        const user = await User.findOne({ email: req.params.email });
+        if (user == null) {
+            res.status(404).json({
+                message: "User not found"
+            });
+            return;
+        }
+        
+        // Prevent admin from blocking themselves
+        if (user.email === req.user.email) {
+            res.status(400).json({
+                message: "You cannot block yourself."
+            });
+            return;
+        }
+
+        user.isBlocked = !user.isBlocked;
+        await user.save();
+        res.json({
+            message: `User successfully ${user.isBlocked ? "blocked" : "unblocked"}`
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Error updating block status"
+        });
+    }
+}
+
+export async function toggleUserRole(req, res) {
+    if (!isAdmin(req)) {
+        res.status(403).json({
+            message: "Access denied. Admins only."
+        });
+        return;
+    }
+    try {
+        const user = await User.findOne({ email: req.params.email });
+        if (user == null) {
+            res.status(404).json({
+                message: "User not found"
+            });
+            return;
+        }
+
+        // Prevent admin from demoting themselves
+        if (user.email === req.user.email) {
+            res.status(400).json({
+                message: "You cannot demote yourself from admin status."
+            });
+            return;
+        }
+
+        user.isAdmin = !user.isAdmin;
+        await user.save();
+        res.json({
+            message: `User role successfully updated. Admin: ${user.isAdmin}`
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Error updating user role"
+        });
     }
 }

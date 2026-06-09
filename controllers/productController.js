@@ -178,5 +178,4 @@ export async function searchProducts(req,res){
             message: "Error searching products",
         });
     }
-
 }
