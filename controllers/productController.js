@@ -33,6 +33,7 @@ export async function createProduct(req, res) {
 			model: req.body.model,
 			category: req.body.category,
 			stock: req.body.stock,
+			isAvailable: req.body.isAvailable,
 		});
 
 		await newProduct.save();
@@ -112,7 +113,7 @@ export async function updateProduct(req,res){
             model : req.body.model,
             category : req.body.category,
             stock : req.body.stock,
-            isAvailble : req.body.isAvailble
+            isAvailable : req.body.isAvailable
         })
 
         res.json({

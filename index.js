@@ -15,8 +15,19 @@ const app = express();
 const mongodbURI = process.env.MONGO_URI
 
 mongoose.connect(mongodbURI).then(
-    ()=>{
+    async ()=>{
         console.log("Connected to MongoDB");
+        // try {
+        //     const result = await mongoose.connection.db.collection('products').updateMany(
+        //         { isAvailble: { $exists: true } },
+        //         { $rename: { isAvailble: "isAvailable" } }
+        //     );
+        //     if (result.modifiedCount > 0) {
+        //         console.log(`Successfully migrated ${result.modifiedCount} products: renamed 'isAvailble' to 'isAvailable'.`);
+        //     }
+        // } catch (err) {
+        //     console.error("Migration error during startup:", err);
+        // }
     }
 )
 app.use(cors())
