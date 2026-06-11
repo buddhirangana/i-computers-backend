@@ -188,3 +188,7 @@ The server decodes the token and attaches user information to `req.user`.
 - `email` (String, unique, required)
 - `otp` (String, required)
 - `createdTime` (Date, default: `Date.now`)
+
+## 📄 License
+
+This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
