@@ -1,8 +1,6 @@
-# iComputers Backend API
+# IONIX Computers Backend API
 
-A secure, scalable RESTful API built with Node.js, Express, and MongoDB for the **iComputers** e-commerce platform.
-
----
+A secure, scalable RESTful API built with Node.js, Express, and MongoDB for the **IONIX Computers** e-commerce platform.
 
 ## 🚀 Key Features
 
@@ -14,8 +12,6 @@ A secure, scalable RESTful API built with Node.js, Express, and MongoDB for the 
 - **Order Management**: Automatic incremental order ID generation, validation of stock availability, and user order logs.
 - **Reviews & Ratings**: Product feedback loop with admin moderation controls.
 
----
-
 ## 🛠️ Tech Stack & Dependencies
 
 - **Runtime Environment**: Node.js (ES Modules syntax: `"type": "module"`)
@@ -24,8 +20,6 @@ A secure, scalable RESTful API built with Node.js, Express, and MongoDB for the 
 - **Security**: [Bcrypt](https://github.com/kelektiv/node.bcrypt.js) for password hashing & [JSON Web Token (JWT)](https://jwt.io/) for access tokens
 - **Email Service**: [Nodemailer](https://nodemailer.com/) for SMTP OTP delivery
 - **Dev-Server**: Nodemon for hot-reload in development
-
----
 
 ## 📁 Project Structure
 
@@ -54,8 +48,6 @@ i-computers-backend/
 └── package.json            # Node dependencies and scripts
 ```
 
----
-
 ## ⚙️ Getting Started
 
 ### Prerequisites
@@ -67,7 +59,7 @@ i-computers-backend/
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/buddhirangana/i-computers-backend.git
    cd i-computers-backend
    ```
 
@@ -91,8 +83,6 @@ i-computers-backend/
    ```
    The API will start running on [http://localhost:3000](http://localhost:3000).
 
----
-
 ## 🔒 Authentication Middleware
 
 Most write operations and profile accesses require a valid JSON Web Token. The authorization token should be passed in the headers as:
@@ -103,8 +93,6 @@ Authorization: Bearer <your_jwt_token>
 The server decodes the token and attaches user information to `req.user`.
 - If the token is invalid: returns `401 Unauthorized`
 - If no header is provided: request proceeds anonymously (`req.user` will be undefined)
-
----
 
 ## 📡 API Reference
 
@@ -124,8 +112,6 @@ The server decodes the token and attaches user information to `req.user`.
 | **PUT** | `/api/users/:email/block` | **Admin** | Toggle blocking state of a user account. |
 | **PUT** | `/api/users/:email/role` | **Admin** | Toggle admin privileges for a user. |
 
----
-
 ### 📦 Product Routes (`/api/products`)
 
 | Method | Endpoint | Auth Required | Description |
@@ -137,8 +123,6 @@ The server decodes the token and attaches user information to `req.user`.
 | **DELETE** | `/api/products/:productId` | **Admin** | Delete a product. |
 | **GET** | `/api/products/search/:query` | None | Search products by name, description, or altNames. |
 
----
-
 ### 🛒 Order Routes (`/api/orders`)
 
 | Method | Endpoint | Auth Required | Description |
@@ -146,8 +130,6 @@ The server decodes the token and attaches user information to `req.user`.
 | **POST** | `/api/orders` | User | Place a new order. Automatically assigns sequential `ORD` IDs. |
 | **GET** | `/api/orders/:pageSize/:pageNumber` | User / Admin | Get paginated orders. (Admins get all; users get their own history). |
 | **PUT** | `/api/orders/:orderId` | **Admin** | Update status (e.g., Pending, Shipped) and admin notes. |
-
----
 
 ### 💬 Review Routes (`/api/reviews`)
 
@@ -158,8 +140,6 @@ The server decodes the token and attaches user information to `req.user`.
 | **DELETE** | `/api/reviews/:id` | User / Admin | Delete a review. Users can delete their own; admins any. |
 | **GET** | `/api/reviews` | **Admin** | Get a list of all product reviews. |
 | **PUT** | `/api/reviews/:id/approve` | **Admin** | Toggle approval/moderation status of a review. |
-
----
 
 ## 🗄️ Database Schemas (Models)
 
