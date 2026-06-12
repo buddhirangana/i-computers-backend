@@ -1,4 +1,9 @@
-# IONIX Computers Backend API
+# 💻 IONIX Computers Backend API
+
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Node.js](https://img.shields.io/badge/Node.js-v18+-339933.svg?logo=nodedotjs&logoColor=white)](https://nodejs.org)
+[![Express](https://img.shields.io/badge/Express-5.2.1-000000.svg?logo=express&logoColor=white)](https://expressjs.com)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248.svg?logo=mongodb&logoColor=white)](https://www.mongodb.com)
 
 A secure, scalable RESTful API built with Node.js, Express, and MongoDB for the **IONIX Computers** e-commerce platform.
 
@@ -111,6 +116,7 @@ The server decodes the token and attaches user information to `req.user`.
 | **GET** | `/api/users` | **Admin** | Retrieves all registered users (passwords omitted). |
 | **PUT** | `/api/users/:email/block` | **Admin** | Toggle blocking state of a user account. |
 | **PUT** | `/api/users/:email/role` | **Admin** | Toggle admin privileges for a user. |
+| **DELETE** | `/api/users/:email` | **Admin** | Deletes a user account (cannot delete self). |
 
 ### 📦 Product Routes (`/api/products`)
 
@@ -191,4 +197,20 @@ The server decodes the token and attaches user information to `req.user`.
 
 ## 📄 License
 
-This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the **Apache License, Version 2.0**. For details, please see the [LICENSE](LICENSE) file in the root directory.
+
+```text
+Copyright 2026 Buddhi Rangana
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
